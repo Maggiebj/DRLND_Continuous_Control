@@ -22,13 +22,14 @@ where
 
 ### Implementation
 
-**Highlevel pseudo-code of the algorithm**
-   Init random weights for  target and local critic and actor.
-   Init replay memory
-   Init noise process(OU noise)
-   foreach episode
+  **Highlevel pseudo-code of the algorithm**
+
+    Init random weights for  target and local critic and actor.
+    Init replay memory
+    Init noise process(OU noise)
+    foreach episode
         Initialize a random process for action exploration (OU noise)
-        Get initial state
+        Get a initial state
         for each step in episode:
             Choose an action using actor policy and exploration noise
             Take action and observe the reward and next state
@@ -38,7 +39,7 @@ where
                 Get a batchsize of tuples 
                 Get predicted next-state actions and Q values from target models
                 Compute Q targets for current states (y_i)
-                Compute Q expected from local model(Q_expected)
+                Predict Q expected from local model(Q_expected)
                 Compute critic loss(y_i and Q_expected)
                 Minimize the critic loss
                 Compute actor loss
@@ -59,14 +60,14 @@ where
         WEIGHT_DECAY = 0        # L2 weight decay
         UPDATE_EVERY = 10       # skip learning step
     
-    **Neural Networks**
+   **Neural Networks**
 
     We have actor network, critic network and their target clones.
      
-    The architecture is multi-layer perceptron. Input layer matches the state size then we have 3 hidden fully connected layers ,each layer followed by a batchnorm layer and finaly the output layer.
+    The architecture is multi-layer perceptrons. Input layer matches the state size then we have 3 hidden fully connected layers ,each layer followed by a batchnorm layer and finaly the output layer.
     
     Critics:
-        state_size(33),,action_size(4) * 256 * 256 * 64 --> output 1 value (The Q value of the action,state pair)
+        state_size(33) * 256, +action_size(4) * 256 * 64 --> output 1 value (The Q value of the action,state value)
         
     Actors:
         state_size(33) * 256 * 256 * 64 --> output action_size values(size 4) (the best believed action to perform)
@@ -75,14 +76,14 @@ where
 
 ### Code Structure
 
-- ddpg_model.py contains the Torch implementation of the Actor Critic neural networks that are being used in the project.
+- ddpg_model.py contains the torch implementation of the Actor Critic neural networks that are being used in the project.
 
 - ddpg_agent.py contains the core of the project, such as agent.learn(),agent.step(),agent.act() and noise process, replay buffer
 
 - Continuous_Control.ipynb puts togheter all the pieces to build and train the agent.
 
 ### Result
-After around 500 episodes the avg score_deque(20) higher than 30
+After around 500 episodes the avg score_deque(20) get higher than 30
 [scores on episodes](score.png)
 
 ### Ideas for Future Work
